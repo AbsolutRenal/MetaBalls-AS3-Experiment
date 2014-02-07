@@ -22,7 +22,7 @@ package com.absolut.geometry{
 	import flash.text.TextFormat;
 
 	
-	[SWF(backgroundColor="#FFFFFF", frameRate="31", width="1024", height="768")]
+	[SWF(backgroundColor="#FFFFFF", frameRate="31", width="1280", height="1024")]
 	public class Metaballs3 extends Sprite{
 		private const RADIUS_MIN:int = 40;
 		private const RADIUS_RANGE:int = 300;
@@ -93,7 +93,7 @@ package com.absolut.geometry{
 			zone.graphics.drawCircle(0, 0, radius);
 			zone.graphics.endFill();
 			circle2.addChild(zone);
-			circle2.x = 600;
+			circle2.x = 900;
 			circle2.y = 300;
 			circleContainer.addChild(circle2);
 		}
@@ -252,34 +252,56 @@ package com.absolut.geometry{
 //					graphics.endFill();
 				}
 				if(Config.DRAW_CURVE){
-					
-					var coefTmp1:Number = -1 / calculateCoefFromPoints(center1, G1);
-					var coefTmp2:Number = -1 / calculateCoefFromPoints(center2, G3);
-					var tmpIntersectP1:Point;
-					
-					var coefTmp3:Number = -1 / calculateCoefFromPoints(center2, G4);
-					var coefTmp4:Number = -1 / calculateCoefFromPoints(center1, G2);
-					var tmpIntersectP2:Point;
+					var P1:Point, P2:Point, P3:Point, P4:Point;
 					
 					var dist1:Number = Point.distance(G1, I1);
 					var dist2:Number = Point.distance(tangentes1[0], I1);
 					var dist3:Number = Point.distance(G3, I2);
 					var dist4:Number = Point.distance(tangentes2[0], I2);
 					
-					var except:Boolean = (dist1 >= dist2 && dist3 <= dist4) || (dist1 <= dist2 && dist3 >= dist4);
-					if(except){
-						tmpIntersectP1 = middleFromPoints(G1, G3);
-						tmpIntersectP2 = middleFromPoints(G2, G4);
+					if(dist2 >= dist1 && Point.distance(G1, tangentes1[0]) < Point.distance(G2, tangentes1[0])){
+//					if(dist2 >= dist1){
+						P1 = G1;
+						P2 = G2;
 					} else {
-						tmpIntersectP1 = calculateLinesIntersection(G1, coefTmp1, G3, coefTmp2);
-						tmpIntersectP2 = calculateLinesIntersection(G4, coefTmp3, G2, coefTmp4);
+						P1 = tangentes1[0];
+						P2 = tangentes1[1];
 					}
 					
-					graphics.moveTo(G1.x, G1.y);
-					graphics.curveTo(tmpIntersectP1.x, tmpIntersectP1.y, G3.x, G3.y);
-					graphics.lineTo(G4.x, G4.y);
-					graphics.curveTo(tmpIntersectP2.x, tmpIntersectP2.y, G2.x, G2.y);
-					graphics.lineTo(G1.x, G1.y);
+					
+					if(dist3 < dist4 && Point.distance(G3, tangentes2[0]) < Point.distance(G4, tangentes2[0])){
+//					if(dist3 < dist4){
+						P3 = G3;
+						P4 = G4;
+					} else {
+						P3 = tangentes2[0];
+						P4 = tangentes2[1];
+					}
+					
+					
+					var coefTmp1:Number = -1 / calculateCoefFromPoints(center1, P1);
+					var coefTmp2:Number = -1 / calculateCoefFromPoints(center2, P3);
+					var tmpIntersectP1:Point;
+					
+					var coefTmp3:Number = -1 / calculateCoefFromPoints(center2, P4);
+					var coefTmp4:Number = -1 / calculateCoefFromPoints(center1, P2);
+					var tmpIntersectP2:Point;
+					
+					
+//					var except:Boolean = (dist1 >= dist2 && dist3 <= dist4) || (dist1 <= dist2 && dist3 >= dist4);
+//					if(except){
+//						tmpIntersectP1 = middleFromPoints(G1, G3);
+//						tmpIntersectP2 = middleFromPoints(G2, G4);
+//					} else {
+						tmpIntersectP1 = calculateLinesIntersection(P1, coefTmp1, P3, coefTmp2);
+						tmpIntersectP2 = calculateLinesIntersection(P4, coefTmp3, P2, coefTmp4);
+//					}
+					
+					graphics.moveTo(P1.x, P1.y);
+					graphics.curveTo(tmpIntersectP1.x, tmpIntersectP1.y, P3.x, P3.y);
+					graphics.lineTo(P4.x, P4.y);
+					graphics.curveTo(tmpIntersectP2.x, tmpIntersectP2.y, P2.x, P2.y);
+					graphics.lineTo(P1.x, P1.y);
 				} else {
 					graphics.moveTo(tangentes1[0].x, tangentes1[0].y);
 					graphics.lineTo(tangentes2[0].x, tangentes2[0].y);
@@ -316,12 +338,12 @@ package com.absolut.geometry{
 					drawPoint(lineContainer, circlesIntersect[0], 2, 0xFFAA00);
 					drawPoint(lineContainer, circlesIntersect[1], 2, 0xFFAA00 << 16);
 					//
-					drawPoint(lineContainer, tangentes1[0], 4, 0xF3F003);
+					drawPoint(lineContainer, tangentes1[0], 8, 0xF3F003);
 					drawPoint(lineContainer, tangentes1[1], 4, 0xF3F003 << 16);
 					drawPoint(lineContainer, tangentes2[0], 4, 0xF3F003);
 					drawPoint(lineContainer, tangentes2[1], 4, 0xF3F003 << 16);
 					//
-					drawPoint(lineContainer, G1, 2, 0xF81AA4);
+					drawPoint(lineContainer, G1, 8, 0xF81AA4);
 					drawPoint(lineContainer, G2, 2, 0xF81AA4 << 16);
 					drawPoint(lineContainer, G3, 2, 0xF81AA4);
 					drawPoint(lineContainer, G4, 2, 0xF81AA4 << 16);
