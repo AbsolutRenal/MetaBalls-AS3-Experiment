@@ -10,7 +10,7 @@ package com.absolut{
 	
 	[SWF(backgroundColor="#FFFFFF", frameRate="60", width="1280", height="1024")]
 	public class Index extends Sprite{
-		private const NB_METABALLS:int = 20;
+		private const NB_METABALLS:int = 30;
 		
 		private var metaballsManager:MetaballManager;
 		
